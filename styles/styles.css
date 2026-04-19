@@ -1,0 +1,201 @@
+/* ================================================================
+   🎮 styles.css — Emoji Whack
+   Lesson 3 · Part 2 · Project 2
+   Neo-brutalist aesthetic shared with the portfolio.
+   STUDENT DOES NOT EDIT THIS FILE — focus is on script.js.
+   ================================================================ */
+
+:root {
+  --bg:    #fef3c7;   /* warm amber — different from portfolio */
+  --ink:   #0f172a;
+  --muted: #64748b;
+
+  --lime:  #84cc16;
+  --plum:  #a855f7;
+  --sun:   #fb923c;
+  --rose:  #f43f5e;
+  --paper: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  -webkit-font-smoothing: antialiased;
+
+  /* subtle dotted backdrop */
+  background-image: radial-gradient(rgba(15, 23, 42, 0.06) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+main {
+  max-width: 560px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  align-items: center;
+  text-align: center;
+}
+
+.hero h1 {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: clamp(2.4rem, 7vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.hero .accent {
+  background: var(--lime);
+  padding: 0 0.2em;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--ink);
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+.hero .tagline {
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  width: 100%;
+}
+.hud-item {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.hud-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hud-value {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- the 3x3 grid ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 420px;
+}
+
+/* .cell is what the JS appends — one per grid square */
+.cell {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: clamp(2.4rem, 9vw, 3.4rem);
+  user-select: none;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.12s;
+}
+.cell:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.cell:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* mole visible = add class has-mole from JS */
+.cell.has-mole {
+  background: var(--lime);
+  animation: pop 0.2s ease-out;
+}
+@keyframes pop {
+  0%   { transform: scale(0.6); }
+  70%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* score flash when you hit */
+.cell.hit {
+  background: var(--plum);
+  animation: hit 0.3s ease-out;
+}
+@keyframes hit {
+  0%   { transform: scale(1) rotate(0deg); }
+  40%  { transform: scale(1.15) rotate(-4deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ---------- start / play-again button ---------- */
+.start-btn {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 0.7em 1.6em;
+  background: var(--sun);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 5px 5px 0 var(--ink);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.start-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink);
+}
+.start-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.start-btn:disabled {
+  background: var(--paper);
+  color: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.8rem;
+}
+.note code {
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  padding: 0 0.3em;
+  font-size: 0.9em;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 480px) {
+  main { padding: 0; }
+  .hud-value { font-size: 1.4rem; }
+}

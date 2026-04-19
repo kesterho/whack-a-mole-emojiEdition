@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Emoji Whack 🐹</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <h1>Emoji <span class="accent">Whack</span> 🐹</h1>
+      <p class="tagline">Click the emoji before it vanishes. 30 seconds. Don't miss.</p>
+    </header>
+
+    <section class="hud">
+      <div class="hud-item">
+        <span class="hud-label">Score</span>
+        <span class="hud-value" id="score">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">Time</span>
+        <span class="hud-value" id="time">30</span>
+      </div>
+    </section>
+
+    <section id="grid" class="grid"></section>
+
+    <button id="start" class="start-btn">Start</button>
+
+    <footer class="note">
+      built with <code>setInterval</code> · <code>Math.random</code> · a lot of caffeine
+    </footer>
+  </main>
+
+  <script src="script/script.js"></script>
+</body>
+</html>
