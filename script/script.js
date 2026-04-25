@@ -86,7 +86,7 @@ for (let i = 0; i < GRID_SIZE; i++) {
 const clearBoardVisuals = () => {
   for (const cell of grid.children) {
     cell.textContent = '';
-    cell.classList.remove('has-mole', 'hit', 'game-over-letter', 'game-over-empty');
+    cell.classList.remove('has-mole', 'hit', 'miss', 'game-over-letter', 'game-over-empty');
   }
 };
 
@@ -109,6 +109,9 @@ const whack = (i) => {
   if (i !== currentIndex) {
     score = Math.max(0, score - 1);
     scoreEl.textContent = score;
+    const cell = grid.children[i];
+    cell.classList.add('miss');
+    setTimeout(() => cell.classList.remove('miss'), 180);
     return;
   }
   score++;
