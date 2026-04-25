@@ -53,7 +53,7 @@ for (let i = 0; i < GRID_SIZE; i++) {
 // ─────────────────────────────────────────────────────────────
 const whack = (i) => {
   if (i !== currentIndex) {
-    score--;
+    score = Math.max(0, score - 1);
     scoreEl.textContent = score;
     return;
   }
