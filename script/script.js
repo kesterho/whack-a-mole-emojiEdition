@@ -52,7 +52,11 @@ for (let i = 0; i < GRID_SIZE; i++) {
 // game logic
 // ─────────────────────────────────────────────────────────────
 const whack = (i) => {
-  if (i !== currentIndex) return;
+  if (i !== currentIndex) {
+    score--;
+    scoreEl.textContent = score;
+    return;
+  }
   score++;
   scoreEl.textContent = score;
   const cell = grid.children[i];
