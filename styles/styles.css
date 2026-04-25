@@ -96,7 +96,53 @@ main {
   letter-spacing: -0.02em;
 }
 
-/* ---------- the 3x3 grid ---------- */
+.difficulty {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.difficulty-btn {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.55em 1.1em;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+}
+
+.difficulty-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.difficulty-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.difficulty-btn.is-active {
+  background: var(--lime);
+}
+
+.difficulty-btn:disabled {
+  background: var(--paper);
+  color: var(--muted);
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ink);
+  cursor: not-allowed;
+}
+
+/* ---------- the 4x4 grid ---------- */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

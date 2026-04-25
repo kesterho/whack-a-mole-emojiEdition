@@ -17,24 +17,48 @@
 // ─────────────────────────────────────────────────────────────
 const MOLES = ['🐹', '🦊', '🐻', '🐼', '🐸', '🦖', '🐵', '🐙', '🐶'];
 const GRID_SIZE = 16;
-const GAME_SECONDS = 30;
-const MOLE_EVERY_MS = 900;
+const DIFFICULTIES = {
+  easy: { label: 'Easy', seconds: 30, moleEveryMs: 1000 },
+  hard: { label: 'Hard', seconds: 30, moleEveryMs: 700 },
+  challenging: { label: 'Challenging', seconds: 30, moleEveryMs: 500 },
+};
+const DEFAULT_DIFFICULTY = 'easy';
 
 const grid     = document.querySelector('#grid');
 const scoreEl  = document.querySelector('#score');
 const timeEl   = document.querySelector('#time');
 const startBtn = document.querySelector('#start');
 const stopBtn  = document.querySelector('#stop');
+const difficultyBtns = document.querySelectorAll('.difficulty-btn');
 
 
 // ─────────────────────────────────────────────────────────────
 // state
 // ─────────────────────────────────────────────────────────────
 let score = 0;
-let timeLeft = GAME_SECONDS;
+let selectedDifficulty = DEFAULT_DIFFICULTY;
+let timeLeft = DIFFICULTIES[selectedDifficulty].seconds;
 let currentIndex = null;
 let gameInterval = null;
 let timerInterval = null;
+
+
+const setDifficultyButtonsDisabled = (disabled) => {
+  difficultyBtns.forEach((btn) => {
+    btn.disabled = disabled;
+  });
+};
+
+const setDifficulty = (level) => {
+  if (!DIFFICULTIES[level]) return;
+  selectedDifficulty = level;
+  difficultyBtns.forEach((btn) => {
+    const isActive = btn.dataset.level === level;
+    btn.classList.toggle('is-active', isActive);
+    btn.setAttribute('aria-pressed', String(isActive));
+  });
+  timeEl.textContent = DIFFICULTIES[level].seconds;
+};
 
 
 // ─────────────────────────────────────────────────────────────
@@ -89,15 +113,17 @@ const tick = () => {
 };
 
 const startGame = () => {
+  const settings = DIFFICULTIES[selectedDifficulty];
   score = 0;
-  timeLeft = GAME_SECONDS;
+  timeLeft = settings.seconds;
   scoreEl.textContent = score;
   timeEl.textContent = timeLeft;
   startBtn.disabled = true;
   startBtn.textContent = '…';
   stopBtn.disabled = false;
+  setDifficultyButtonsDisabled(true);
 
-  gameInterval = setInterval(tick, MOLE_EVERY_MS);
+  gameInterval = setInterval(tick, settings.moleEveryMs);
   timerInterval = setInterval(() => {
     timeLeft--;
     timeEl.textContent = timeLeft;
@@ -113,7 +139,8 @@ const endGame = () => {
   hideMole();
   startBtn.disabled = false;
   stopBtn.disabled = true;
-  startBtn.textContent = `Play again (last: ${score})`;
+  setDifficultyButtonsDisabled(false);
+  startBtn.textContent = `Play again (${DIFFICULTIES[selectedDifficulty].label} · last: ${score})`;
 };
 
 
@@ -122,4 +149,9 @@ const endGame = () => {
 // ─────────────────────────────────────────────────────────────
 startBtn.addEventListener('click', startGame);
 stopBtn.addEventListener('click', endGame);
+difficultyBtns.forEach((btn) => {
+  btn.addEventListener('click', () => setDifficulty(btn.dataset.level));
+});
+
+setDifficulty(DEFAULT_DIFFICULTY);
 
