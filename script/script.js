@@ -24,6 +24,7 @@ const grid     = document.querySelector('#grid');
 const scoreEl  = document.querySelector('#score');
 const timeEl   = document.querySelector('#time');
 const startBtn = document.querySelector('#start');
+const stopBtn  = document.querySelector('#stop');
 
 
 // ─────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ const startGame = () => {
   timeEl.textContent = timeLeft;
   startBtn.disabled = true;
   startBtn.textContent = '…';
+  stopBtn.disabled = false;
 
   gameInterval = setInterval(tick, MOLE_EVERY_MS);
   timerInterval = setInterval(() => {
@@ -106,8 +108,11 @@ const startGame = () => {
 const endGame = () => {
   clearInterval(gameInterval);
   clearInterval(timerInterval);
+  gameInterval = null;
+  timerInterval = null;
   hideMole();
   startBtn.disabled = false;
+  stopBtn.disabled = true;
   startBtn.textContent = `Play again (last: ${score})`;
 };
 
@@ -116,4 +121,5 @@ const endGame = () => {
 // kick things off
 // ─────────────────────────────────────────────────────────────
 startBtn.addEventListener('click', startGame);
+stopBtn.addEventListener('click', endGame);
 

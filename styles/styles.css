@@ -181,6 +181,46 @@ main {
   box-shadow: 2px 2px 0 var(--ink);
 }
 
+.controls {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stop-btn {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 0.7em 1.6em;
+  background: var(--rose);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 5px 5px 0 var(--ink);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.stop-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink);
+}
+
+.stop-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.stop-btn:disabled {
+  background: var(--paper);
+  color: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
 .note {
   font-size: 0.75rem;
   color: var(--muted);
