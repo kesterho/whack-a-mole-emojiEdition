@@ -23,6 +23,12 @@ const DIFFICULTIES = {
   challenging: { label: 'Challenging', seconds: 30, moleEveryMs: 500 },
 };
 const DEFAULT_DIFFICULTY = 'easy';
+const GAME_OVER_LAYOUT = [
+  '', '', '', '',
+  'G', 'A', 'M', 'E',
+  'O', 'V', 'E', 'R',
+  '', '', '', '',
+];
 
 const grid     = document.querySelector('#grid');
 const scoreEl  = document.querySelector('#score');
@@ -41,6 +47,7 @@ let timeLeft = DIFFICULTIES[selectedDifficulty].seconds;
 let currentIndex = null;
 let gameInterval = null;
 let timerInterval = null;
+let isGameRunning = false;
 
 
 const setDifficultyButtonsDisabled = (disabled) => {
@@ -62,7 +69,7 @@ const setDifficulty = (level) => {
 
 
 // ─────────────────────────────────────────────────────────────
-// build the 3×3 grid
+// build the 4×4 grid
 // ─────────────────────────────────────────────────────────────
 for (let i = 0; i < GRID_SIZE; i++) {
   const cell = document.createElement('div');
@@ -76,7 +83,29 @@ for (let i = 0; i < GRID_SIZE; i++) {
 // ─────────────────────────────────────────────────────────────
 // game logic
 // ─────────────────────────────────────────────────────────────
+const clearBoardVisuals = () => {
+  for (const cell of grid.children) {
+    cell.textContent = '';
+    cell.classList.remove('has-mole', 'hit', 'game-over-letter', 'game-over-empty');
+  }
+};
+
+const showGameOverBoard = () => {
+  clearBoardVisuals();
+  GAME_OVER_LAYOUT.forEach((letter, index) => {
+    const cell = grid.children[index];
+    if (!cell) return;
+    if (letter) {
+      cell.textContent = letter;
+      cell.classList.add('game-over-letter');
+      return;
+    }
+    cell.classList.add('game-over-empty');
+  });
+};
+
 const whack = (i) => {
+  if (!isGameRunning) return;
   if (i !== currentIndex) {
     score = Math.max(0, score - 1);
     scoreEl.textContent = score;
@@ -116,6 +145,9 @@ const startGame = () => {
   const settings = DIFFICULTIES[selectedDifficulty];
   score = 0;
   timeLeft = settings.seconds;
+  isGameRunning = true;
+  currentIndex = null;
+  clearBoardVisuals();
   scoreEl.textContent = score;
   timeEl.textContent = timeLeft;
   startBtn.disabled = true;
@@ -132,11 +164,14 @@ const startGame = () => {
 };
 
 const endGame = () => {
+  if (!isGameRunning && !gameInterval && !timerInterval) return;
   clearInterval(gameInterval);
   clearInterval(timerInterval);
   gameInterval = null;
   timerInterval = null;
+  isGameRunning = false;
   hideMole();
+  showGameOverBoard();
   startBtn.disabled = false;
   stopBtn.disabled = true;
   setDifficultyButtonsDisabled(false);

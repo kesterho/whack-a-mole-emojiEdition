@@ -190,6 +190,20 @@ main {
   background: var(--plum);
   animation: hit 0.3s ease-out;
 }
+
+.cell.game-over-letter {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: clamp(1.9rem, 6vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.cell.game-over-empty {
+  background: color-mix(in srgb, var(--paper) 70%, var(--muted) 30%);
+  opacity: 0.75;
+}
 @keyframes hit {
   0%   { transform: scale(1) rotate(0deg); }
   40%  { transform: scale(1.15) rotate(-4deg); }
