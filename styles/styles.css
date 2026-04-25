@@ -96,6 +96,35 @@ main {
   letter-spacing: -0.02em;
 }
 
+.score-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.score-delta {
+  min-width: 2ch;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.score-delta.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.score-delta.positive {
+  color: var(--lime);
+}
+
+.score-delta.negative {
+  color: var(--rose);
+}
+
 .difficulty {
   display: flex;
   gap: 0.6rem;

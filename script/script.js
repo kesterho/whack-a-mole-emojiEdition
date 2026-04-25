@@ -32,6 +32,7 @@ const GAME_OVER_LAYOUT = [
 
 const grid     = document.querySelector('#grid');
 const scoreEl  = document.querySelector('#score');
+const scoreDeltaEl = document.querySelector('#score-delta');
 const timeEl   = document.querySelector('#time');
 const startBtn = document.querySelector('#start');
 const stopBtn  = document.querySelector('#stop');
@@ -48,6 +49,19 @@ let currentIndex = null;
 let gameInterval = null;
 let timerInterval = null;
 let isGameRunning = false;
+let scoreDeltaTimeout = null;
+
+
+const showScoreDelta = (value, type) => {
+  clearTimeout(scoreDeltaTimeout);
+  scoreDeltaEl.textContent = value;
+  scoreDeltaEl.classList.remove('positive', 'negative');
+  scoreDeltaEl.classList.add(type, 'show');
+  scoreDeltaTimeout = setTimeout(() => {
+    scoreDeltaEl.classList.remove('show', 'positive', 'negative');
+    scoreDeltaEl.textContent = '';
+  }, 450);
+};
 
 
 const setDifficultyButtonsDisabled = (disabled) => {
@@ -109,6 +123,7 @@ const whack = (i) => {
   if (i !== currentIndex) {
     score = Math.max(0, score - 1);
     scoreEl.textContent = score;
+    showScoreDelta('-1', 'negative');
     const cell = grid.children[i];
     cell.classList.add('miss');
     setTimeout(() => cell.classList.remove('miss'), 180);
@@ -116,6 +131,7 @@ const whack = (i) => {
   }
   score++;
   scoreEl.textContent = score;
+  showScoreDelta('+1', 'positive');
   const cell = grid.children[i];
   cell.classList.add('hit');
   setTimeout(() => cell.classList.remove('hit'), 300);
@@ -151,6 +167,8 @@ const startGame = () => {
   isGameRunning = true;
   currentIndex = null;
   clearBoardVisuals();
+  scoreDeltaEl.textContent = '';
+  scoreDeltaEl.classList.remove('show', 'positive', 'negative');
   scoreEl.textContent = score;
   timeEl.textContent = timeLeft;
   startBtn.disabled = true;

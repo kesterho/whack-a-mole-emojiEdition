@@ -19,7 +19,10 @@
     <section class="hud">
       <div class="hud-item">
         <span class="hud-label">Score</span>
-        <span class="hud-value" id="score">0</span>
+        <div class="score-wrap">
+          <span class="hud-value" id="score">0</span>
+          <span class="score-delta" id="score-delta" aria-live="polite"></span>
+        </div>
       </div>
       <div class="hud-item">
         <span class="hud-label">Time</span>
