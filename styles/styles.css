@@ -99,7 +99,7 @@ main {
 /* ---------- the 3x3 grid ---------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.7rem;
   width: 100%;
   aspect-ratio: 1 / 1;

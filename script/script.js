@@ -16,7 +16,7 @@
 // constants + DOM refs
 // ─────────────────────────────────────────────────────────────
 const MOLES = ['🐹', '🦊', '🐻', '🐼', '🐸', '🦖', '🐵', '🐙', '🐶'];
-const GRID_SIZE = 9;
+const GRID_SIZE = 16;
 const GAME_SECONDS = 30;
 const MOLE_EVERY_MS = 900;
 
