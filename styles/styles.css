@@ -133,6 +133,87 @@ main {
   width: 100%;
 }
 
+.duration {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.duration-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.duration-custom {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.duration-custom-label {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.duration-input {
+  width: 5.4rem;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.5em 0.6em;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.duration-input:disabled {
+  color: var(--muted);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.duration-set-btn {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 0.55em 0.9em;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+}
+
+.duration-set-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.duration-set-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.duration-set-btn:disabled {
+  background: var(--paper);
+  color: var(--muted);
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ink);
+  cursor: not-allowed;
+}
+
 .difficulty-btn {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-weight: 700;

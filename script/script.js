@@ -18,11 +18,12 @@
 const MOLES = ['🐹', '🦊', '🐻', '🐼', '🐸', '🦖', '🐵', '🐙', '🐶'];
 const GRID_SIZE = 16;
 const DIFFICULTIES = {
-  easy: { label: 'Easy', seconds: 30, moleEveryMs: 1000 },
-  hard: { label: 'Hard', seconds: 30, moleEveryMs: 700 },
-  challenging: { label: 'Challenging', seconds: 30, moleEveryMs: 500 },
+  easy: { label: 'Easy', moleEveryMs: 1000 },
+  hard: { label: 'Hard', moleEveryMs: 700 },
+  challenging: { label: 'Challenging', moleEveryMs: 500 },
 };
 const DEFAULT_DIFFICULTY = 'easy';
+const DEFAULT_DURATION = 30;
 const GAME_OVER_LAYOUT = [
   '', '', '', '',
   'G', 'A', 'M', 'E',
@@ -37,6 +38,8 @@ const timeEl   = document.querySelector('#time');
 const startBtn = document.querySelector('#start');
 const stopBtn  = document.querySelector('#stop');
 const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+const customDurationInput = document.querySelector('#custom-duration');
+const setDurationBtn = document.querySelector('#set-duration');
 
 
 // ─────────────────────────────────────────────────────────────
@@ -44,12 +47,15 @@ const difficultyBtns = document.querySelectorAll('.difficulty-btn');
 // ─────────────────────────────────────────────────────────────
 let score = 0;
 let selectedDifficulty = DEFAULT_DIFFICULTY;
-let timeLeft = DIFFICULTIES[selectedDifficulty].seconds;
+let selectedDuration = DEFAULT_DURATION;
+let timeLeft = selectedDuration;
 let currentIndex = null;
 let gameInterval = null;
 let timerInterval = null;
 let isGameRunning = false;
 let scoreDeltaTimeout = null;
+const MIN_DURATION_SECONDS = 5;
+const MAX_DURATION_SECONDS = 300;
 
 
 const showScoreDelta = (value, type) => {
@@ -70,6 +76,11 @@ const setDifficultyButtonsDisabled = (disabled) => {
   });
 };
 
+const setDurationButtonsDisabled = (disabled) => {
+  customDurationInput.disabled = disabled;
+  setDurationBtn.disabled = disabled;
+};
+
 const setDifficulty = (level) => {
   if (!DIFFICULTIES[level]) return;
   selectedDifficulty = level;
@@ -78,7 +89,24 @@ const setDifficulty = (level) => {
     btn.classList.toggle('is-active', isActive);
     btn.setAttribute('aria-pressed', String(isActive));
   });
-  timeEl.textContent = DIFFICULTIES[level].seconds;
+};
+
+const setDuration = (seconds) => {
+  const parsedSeconds = Number(seconds);
+  if (!Number.isInteger(parsedSeconds)) return;
+  if (parsedSeconds < MIN_DURATION_SECONDS || parsedSeconds > MAX_DURATION_SECONDS) return;
+  selectedDuration = parsedSeconds;
+  if (!isGameRunning) timeEl.textContent = selectedDuration;
+  customDurationInput.value = String(selectedDuration);
+};
+
+const applyCustomDuration = () => {
+  const value = Number(customDurationInput.value);
+  if (!Number.isInteger(value) || value < MIN_DURATION_SECONDS || value > MAX_DURATION_SECONDS) {
+    customDurationInput.value = String(selectedDuration);
+    return;
+  }
+  setDuration(value);
 };
 
 
@@ -163,7 +191,7 @@ const tick = () => {
 const startGame = () => {
   const settings = DIFFICULTIES[selectedDifficulty];
   score = 0;
-  timeLeft = settings.seconds;
+  timeLeft = selectedDuration;
   isGameRunning = true;
   currentIndex = null;
   clearBoardVisuals();
@@ -175,6 +203,7 @@ const startGame = () => {
   startBtn.textContent = '…';
   stopBtn.disabled = false;
   setDifficultyButtonsDisabled(true);
+  setDurationButtonsDisabled(true);
 
   gameInterval = setInterval(tick, settings.moleEveryMs);
   timerInterval = setInterval(() => {
@@ -196,7 +225,8 @@ const endGame = () => {
   startBtn.disabled = false;
   stopBtn.disabled = true;
   setDifficultyButtonsDisabled(false);
-  startBtn.textContent = `Play again (${DIFFICULTIES[selectedDifficulty].label} · last: ${score})`;
+  setDurationButtonsDisabled(false);
+  startBtn.textContent = `Play again (${DIFFICULTIES[selectedDifficulty].label} · ${selectedDuration}s · last: ${score})`;
 };
 
 
@@ -208,6 +238,13 @@ stopBtn.addEventListener('click', endGame);
 difficultyBtns.forEach((btn) => {
   btn.addEventListener('click', () => setDifficulty(btn.dataset.level));
 });
+setDurationBtn.addEventListener('click', applyCustomDuration);
+customDurationInput.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  applyCustomDuration();
+});
 
 setDifficulty(DEFAULT_DIFFICULTY);
+setDuration(DEFAULT_DURATION);
 

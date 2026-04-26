@@ -36,6 +36,15 @@
       <button class="difficulty-btn" data-level="challenging" type="button">Challenging</button>
     </section>
 
+    <section class="duration" aria-label="Choose game duration">
+      <span class="duration-label">Round length</span>
+      <div class="duration-custom">
+        <label for="custom-duration" class="duration-custom-label">Custom</label>
+        <input id="custom-duration" class="duration-input" type="number" min="5" max="300" step="1" value="30" inputmode="numeric" aria-label="Custom round length in seconds">
+        <button id="set-duration" class="duration-set-btn" type="button">Set</button>
+      </div>
+    </section>
+
     <section id="grid" class="grid"></section>
 
     <div class="controls">
