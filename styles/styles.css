@@ -281,9 +281,10 @@ main {
   box-shadow: 4px 4px 0 var(--ink);
   padding: 0.75rem 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.8rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  text-align: left;
 }
 
 .profile-label {
@@ -295,16 +296,36 @@ main {
 }
 
 .profile-main {
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
-.profile-name {
+.profile-name-input {
+  min-width: 0;
+  width: 100%;
+  padding: 0.42em 0.62em;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
   font-family: 'Syne', system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+.profile-name-input:focus {
+  outline: none;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.profile-name-input::placeholder {
+  color: var(--muted);
 }
 
 .profile-btn {
@@ -331,6 +352,22 @@ main {
 .profile-btn:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--ink);
+}
+
+.profile-hint {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.profile-hint.is-error {
+  color: #b91c1c;
+}
+
+.profile-hint.is-success {
+  color: #3f6212;
 }
 
 .leaderboard {
@@ -476,6 +513,25 @@ body.ranked-theme .lb-status {
 body.ranked-theme .profile-btn,
 body.ranked-theme .lb-row {
   border-color: #000;
+}
+
+body.ranked-theme .profile-name-input {
+  background: #fff5f6;
+  color: #2a0d14;
+  border-color: #000;
+}
+
+body.ranked-theme .profile-name-input::placeholder,
+body.ranked-theme .profile-hint {
+  color: #6b1c2f;
+}
+
+body.ranked-theme .profile-hint.is-success {
+  color: #14532d;
+}
+
+body.ranked-theme .profile-hint.is-error {
+  color: #991b1b;
 }
 
 body.ranked-theme .lb-row.is-you {
@@ -693,13 +749,11 @@ body.ranked-theme .lb-empty {
 @media (max-width: 480px) {
   main { padding: 0; }
   .hud-value { font-size: 1.4rem; }
-  .player-profile {
-    flex-direction: column;
-    align-items: flex-start;
-  }
   .profile-main {
+    grid-template-columns: 1fr;
+  }
+  .profile-btn {
     width: 100%;
-    justify-content: space-between;
   }
   .lb-head {
     flex-direction: column;

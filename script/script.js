@@ -55,8 +55,9 @@ const playModeBtns = document.querySelectorAll('.mode-btn');
 const durationControls = document.querySelector('#duration-controls');
 const customDurationInput = document.querySelector('#custom-duration');
 const setDurationBtn = document.querySelector('#set-duration');
-const playerEl = document.querySelector('#player-name');
-const changeBtn = document.querySelector('#change-name');
+const playerNameInput = document.querySelector('#player-name-input');
+const saveNameBtn = document.querySelector('#save-name');
+const profileNameHint = document.querySelector('#profile-name-hint');
 const leaderboardSection = document.querySelector('#leaderboard');
 const lbStatus = document.querySelector('#lb-status');
 const lbList = document.querySelector('#lb-list');
@@ -83,6 +84,7 @@ const PLAY_MODES = {
 const RANKED_DURATION_SECONDS = DEFAULT_DURATION;
 const LEADERBOARD_LIMIT = 10;
 const DEFAULT_PLAYER_NAME = 'guest';
+const MAX_PLAYER_NAME_LENGTH = 20;
 let selectedPlayMode = PLAY_MODES.casual;
 let previousCasualDifficulty = DEFAULT_DIFFICULTY;
 let previousCasualDuration = DEFAULT_DURATION;
@@ -245,30 +247,64 @@ const applyCustomDuration = () => {
 
 
 
-const askForUsername = () => {
-  const currentName = username === DEFAULT_PLAYER_NAME ? '' : username;
-  let name = prompt('Enter your username', currentName);
-  if (name === null) return false;
-  name = name.trim().slice(0, 20);
-  if (!name) return false;
+const normalizeUsername = (value) => String(value ?? '').trim().slice(0, MAX_PLAYER_NAME_LENGTH);
+
+const setProfileHint = (message, tone = '') => {
+  profileNameHint.textContent = message;
+  profileNameHint.classList.remove('is-error', 'is-success');
+  if (tone) {
+    profileNameHint.classList.add(`is-${tone}`);
+  }
+};
+
+const setUsername = (name) => {
   username = name;
-  localStorage.setItem('emojiWhackName', name);
-  playerEl.textContent = name;
+  playerNameInput.value = name;
+};
+
+const saveUsernameFromInput = () => {
+  const candidate = normalizeUsername(playerNameInput.value);
+  if (!candidate) {
+    playerNameInput.value = username;
+    setProfileHint('Name cannot be empty.', 'error');
+    return false;
+  }
+
+  if (candidate === username) {
+    playerNameInput.value = username;
+    setProfileHint('Name is already up to date.');
+    return false;
+  }
+
+  setUsername(candidate);
+  localStorage.setItem('emojiWhackName', candidate);
+  setProfileHint('Name saved for ranked runs.', 'success');
   return true;
 };
 
 const loadUsername = () => {
   const saved = localStorage.getItem('emojiWhackName');
-  username = saved ? saved.trim().slice(0, 20) : DEFAULT_PLAYER_NAME;
-  if (!username) username = DEFAULT_PLAYER_NAME;
-  playerEl.textContent = username;
+  const loaded = normalizeUsername(saved);
+  setUsername(loaded || DEFAULT_PLAYER_NAME);
+  setProfileHint('Your ranked runs use this name.');
 };
 
-changeBtn.addEventListener('click', () => {
-  const changed = askForUsername();
+saveNameBtn.addEventListener('click', () => {
+  const changed = saveUsernameFromInput();
   if (changed && selectedPlayMode === PLAY_MODES.ranked) {
     void loadLeaderboard();
   }
+});
+
+playerNameInput.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  saveNameBtn.click();
+});
+
+playerNameInput.addEventListener('blur', () => {
+  const normalized = normalizeUsername(playerNameInput.value);
+  playerNameInput.value = normalized || username;
 });
 
 

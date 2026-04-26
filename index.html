@@ -53,11 +53,22 @@
     </section>
 
     <section class="player-profile" aria-label="Player profile">
-      <span class="profile-label">Player</span>
+      <span class="profile-label">Player tag</span>
       <div class="profile-main">
-        <span id="player-name" class="profile-name">guest</span>
-        <button id="change-name" class="profile-btn" type="button">Change name</button>
+        <input
+          id="player-name-input"
+          class="profile-name-input"
+          type="text"
+          maxlength="20"
+          autocomplete="nickname"
+          spellcheck="false"
+          value="guest"
+          aria-label="Player username"
+          aria-describedby="profile-name-hint"
+        >
+        <button id="save-name" class="profile-btn" type="button">Save</button>
       </div>
+      <p id="profile-name-hint" class="profile-hint" aria-live="polite">Your ranked runs use this name.</p>
     </section>
 
     <div class="controls">
