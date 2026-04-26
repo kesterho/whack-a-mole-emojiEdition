@@ -58,6 +58,7 @@ const setDurationBtn = document.querySelector('#set-duration');
 const playerNameInput = document.querySelector('#player-name-input');
 const saveNameBtn = document.querySelector('#save-name');
 const profileNameHint = document.querySelector('#profile-name-hint');
+const playerProfileSection = document.querySelector('.player-profile');
 const leaderboardSection = document.querySelector('#leaderboard');
 const lbStatus = document.querySelector('#lb-status');
 const lbList = document.querySelector('#lb-list');
@@ -197,6 +198,9 @@ const setPlayMode = (mode) => {
   }
   selectedPlayMode = mode;
   const isRanked = selectedPlayMode === PLAY_MODES.ranked;
+
+  playerProfileSection.style.display = isRanked ? '' : 'none';
+  leaderboardSection.hidden = !isRanked;
 
   playModeBtns.forEach((btn) => {
     const isActive = btn.dataset.mode === mode;

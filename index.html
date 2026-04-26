@@ -52,39 +52,41 @@
       <button class="mode-btn" data-mode="ranked" type="button">Ranked Play</button>
     </section>
 
-    <section class="player-profile" aria-label="Player profile">
-      <span class="profile-label">Player tag</span>
-      <div class="profile-main">
-        <input
-          id="player-name-input"
-          class="profile-name-input"
-          type="text"
-          maxlength="20"
-          autocomplete="nickname"
-          spellcheck="false"
-          value="guest"
-          aria-label="Player username"
-          aria-describedby="profile-name-hint"
-        >
-        <button id="save-name" class="profile-btn" type="button">Save</button>
+    <div class="ranked-layout">
+      <div class="controls">
+        <button id="start" class="start-btn">Start</button>
+        <button id="stop" class="stop-btn" disabled>Stop</button>
       </div>
-      <p id="profile-name-hint" class="profile-hint" aria-live="polite">Your ranked runs use this name.</p>
-    </section>
 
-    <div class="controls">
-      <button id="start" class="start-btn">Start</button>
-      <button id="stop" class="stop-btn" disabled>Stop</button>
+      <section class="player-profile" aria-label="Player profile">
+        <span class="profile-label">Player tag</span>
+        <div class="profile-main">
+          <input
+            id="player-name-input"
+            class="profile-name-input"
+            type="text"
+            maxlength="20"
+            autocomplete="nickname"
+            spellcheck="false"
+            value="guest"
+            aria-label="Player username"
+            aria-describedby="profile-name-hint"
+          >
+          <button id="save-name" class="profile-btn" type="button">Save</button>
+        </div>
+        <p id="profile-name-hint" class="profile-hint" aria-live="polite">Your ranked runs use this name.</p>
+      </section>
+
+      <section id="leaderboard" class="leaderboard is-locked" aria-label="Ranked leaderboard">
+        <div class="lb-head">
+          <h2 class="lb-title">Ranked Leaderboard</h2>
+          <p id="lb-status" class="lb-status" aria-live="polite">Ranked mode only</p>
+        </div>
+        <ol id="lb-list" class="lb-list">
+          <li class="lb-empty">Switch to Ranked Play to view top scores.</li>
+        </ol>
+      </section>
     </div>
-
-    <section id="leaderboard" class="leaderboard is-locked" aria-label="Ranked leaderboard">
-      <div class="lb-head">
-        <h2 class="lb-title">Ranked Leaderboard</h2>
-        <p id="lb-status" class="lb-status" aria-live="polite">Ranked mode only</p>
-      </div>
-      <ol id="lb-list" class="lb-list">
-        <li class="lb-empty">Switch to Ranked Play to view top scores.</li>
-      </ol>
-    </section>
 
     <footer class="note">
       built with <code>setInterval</code> · <code>Math.random</code> · a lot of caffeine
