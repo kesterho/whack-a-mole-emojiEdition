@@ -38,6 +38,8 @@ const timeEl   = document.querySelector('#time');
 const startBtn = document.querySelector('#start');
 const stopBtn  = document.querySelector('#stop');
 const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+const playModeBtns = document.querySelectorAll('.mode-btn');
+const durationControls = document.querySelector('#duration-controls');
 const customDurationInput = document.querySelector('#custom-duration');
 const setDurationBtn = document.querySelector('#set-duration');
 
@@ -56,6 +58,14 @@ let isGameRunning = false;
 let scoreDeltaTimeout = null;
 const MIN_DURATION_SECONDS = 5;
 const MAX_DURATION_SECONDS = 300;
+const PLAY_MODES = {
+  casual: 'casual',
+  ranked: 'ranked',
+};
+const RANKED_DURATION_SECONDS = DEFAULT_DURATION;
+let selectedPlayMode = PLAY_MODES.casual;
+let previousCasualDifficulty = DEFAULT_DIFFICULTY;
+let previousCasualDuration = DEFAULT_DURATION;
 
 
 const showScoreDelta = (value, type) => {
@@ -76,6 +86,12 @@ const setDifficultyButtonsDisabled = (disabled) => {
   });
 };
 
+const setModeButtonsDisabled = (disabled) => {
+  playModeBtns.forEach((btn) => {
+    btn.disabled = disabled;
+  });
+};
+
 const setDurationButtonsDisabled = (disabled) => {
   customDurationInput.disabled = disabled;
   setDurationBtn.disabled = disabled;
@@ -89,6 +105,41 @@ const setDifficulty = (level) => {
     btn.classList.toggle('is-active', isActive);
     btn.setAttribute('aria-pressed', String(isActive));
   });
+};
+
+const setPlayMode = (mode) => {
+  if (!PLAY_MODES[mode]) return;
+  if (selectedPlayMode === PLAY_MODES.casual && mode === PLAY_MODES.ranked) {
+    previousCasualDifficulty = selectedDifficulty;
+    previousCasualDuration = selectedDuration;
+  }
+  selectedPlayMode = mode;
+  const isRanked = selectedPlayMode === PLAY_MODES.ranked;
+
+  playModeBtns.forEach((btn) => {
+    const isActive = btn.dataset.mode === mode;
+    btn.classList.toggle('is-active', isActive);
+    btn.setAttribute('aria-pressed', String(isActive));
+  });
+
+  document.body.classList.toggle('ranked-theme', isRanked);
+  durationControls.classList.toggle('is-hidden', isRanked);
+
+  if (isRanked) {
+    setDifficulty('challenging');
+    setDuration(RANKED_DURATION_SECONDS);
+    setDifficultyButtonsDisabled(true);
+    setDurationButtonsDisabled(true);
+    return;
+  }
+
+  if (!isGameRunning) {
+    setDifficulty(previousCasualDifficulty);
+    setDuration(previousCasualDuration);
+    setDifficultyButtonsDisabled(false);
+    setDurationButtonsDisabled(false);
+    timeEl.textContent = selectedDuration;
+  }
 };
 
 const setDuration = (seconds) => {
@@ -202,6 +253,7 @@ const startGame = () => {
   startBtn.disabled = true;
   startBtn.textContent = '…';
   stopBtn.disabled = false;
+  setModeButtonsDisabled(true);
   setDifficultyButtonsDisabled(true);
   setDurationButtonsDisabled(true);
 
@@ -224,8 +276,14 @@ const endGame = () => {
   showGameOverBoard();
   startBtn.disabled = false;
   stopBtn.disabled = true;
-  setDifficultyButtonsDisabled(false);
-  setDurationButtonsDisabled(false);
+  setModeButtonsDisabled(false);
+  if (selectedPlayMode === PLAY_MODES.ranked) {
+    setDifficultyButtonsDisabled(true);
+    setDurationButtonsDisabled(true);
+  } else {
+    setDifficultyButtonsDisabled(false);
+    setDurationButtonsDisabled(false);
+  }
   startBtn.textContent = `Play again (${DIFFICULTIES[selectedDifficulty].label} · ${selectedDuration}s · last: ${score})`;
 };
 
@@ -238,6 +296,9 @@ stopBtn.addEventListener('click', endGame);
 difficultyBtns.forEach((btn) => {
   btn.addEventListener('click', () => setDifficulty(btn.dataset.level));
 });
+playModeBtns.forEach((btn) => {
+  btn.addEventListener('click', () => setPlayMode(btn.dataset.mode));
+});
 setDurationBtn.addEventListener('click', applyCustomDuration);
 customDurationInput.addEventListener('keydown', (event) => {
   if (event.key !== 'Enter') return;
@@ -247,4 +308,5 @@ customDurationInput.addEventListener('keydown', (event) => {
 
 setDifficulty(DEFAULT_DIFFICULTY);
 setDuration(DEFAULT_DURATION);
+setPlayMode(PLAY_MODES.casual);
 

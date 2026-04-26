@@ -36,7 +36,7 @@
       <button class="difficulty-btn" data-level="challenging" type="button">Challenging</button>
     </section>
 
-    <section class="duration" aria-label="Choose game duration">
+    <section id="duration-controls" class="duration" aria-label="Choose game duration">
       <span class="duration-label">Round length</span>
       <div class="duration-custom">
         <label for="custom-duration" class="duration-custom-label">Custom</label>
@@ -46,6 +46,11 @@
     </section>
 
     <section id="grid" class="grid"></section>
+
+    <section class="play-mode" aria-label="Choose play mode">
+      <button class="mode-btn is-active" data-mode="casual" type="button">Casual Play</button>
+      <button class="mode-btn" data-mode="ranked" type="button">Ranked Play</button>
+    </section>
 
     <div class="controls">
       <button id="start" class="start-btn">Start</button>
