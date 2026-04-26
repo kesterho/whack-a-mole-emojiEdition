@@ -35,9 +35,13 @@ body {
 }
 
 body.ranked-theme {
-  background: #2a0309;
+  background-color: #3a0712;
   color: #ffe9e9;
-  background-image: radial-gradient(rgba(244, 63, 94, 0.22) 1.5px, transparent 1.5px);
+  background-image:
+    radial-gradient(circle at 16% 14%, rgba(172, 35, 64, 0.5) 0%, rgba(172, 35, 64, 0.08) 40%, transparent 62%),
+    radial-gradient(circle at 86% 26%, rgba(138, 25, 48, 0.38) 0%, rgba(138, 25, 48, 0.07) 38%, transparent 58%),
+    radial-gradient(rgba(244, 63, 94, 0.16) 1.5px, transparent 1.5px);
+  background-size: auto, auto, 24px 24px;
 }
 
 main {
@@ -287,6 +291,23 @@ body.ranked-theme .note code {
 
 body.ranked-theme .hero .accent {
   background: var(--rose);
+}
+
+body.ranked-theme .difficulty-btn[data-level="easy"],
+body.ranked-theme .difficulty-btn[data-level="hard"] {
+  display: none;
+}
+
+body.ranked-theme .difficulty-btn[data-level="challenging"] {
+  background: var(--rose);
+  color: var(--paper);
+  box-shadow: 4px 4px 0 #000;
+}
+
+body.ranked-theme .difficulty-btn[data-level="challenging"]:disabled {
+  background: var(--rose);
+  color: var(--paper);
+  box-shadow: 4px 4px 0 #000;
 }
 
 .difficulty-btn {
