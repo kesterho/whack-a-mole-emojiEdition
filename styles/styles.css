@@ -273,6 +273,154 @@ main {
   cursor: not-allowed;
 }
 
+.player-profile {
+  width: 100%;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.profile-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.profile-main {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.profile-name {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.profile-btn {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45em 0.8em;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.profile-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.profile-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.leaderboard {
+  width: 100%;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 0.9rem;
+  text-align: left;
+}
+
+.leaderboard.is-locked {
+  opacity: 0.92;
+}
+
+.lb-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.lb-title {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.lb-status {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lb-list {
+  list-style: none;
+  margin-top: 0.65rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lb-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.45rem 0.6rem;
+  background: color-mix(in srgb, var(--paper) 80%, var(--bg) 20%);
+}
+
+.lb-row.is-you {
+  background: color-mix(in srgb, var(--lime) 42%, var(--paper) 58%);
+}
+
+.lb-rank {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.lb-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.lb-score {
+  font-family: 'Syne', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.lb-empty {
+  border: 2px dashed var(--muted);
+  border-radius: 10px;
+  padding: 0.6rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 body.ranked-theme main {
   filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.55));
 }
@@ -283,6 +431,10 @@ body.ranked-theme .start-btn,
 body.ranked-theme .stop-btn,
 body.ranked-theme .difficulty-btn,
 body.ranked-theme .mode-btn,
+body.ranked-theme .player-profile,
+body.ranked-theme .profile-btn,
+body.ranked-theme .leaderboard,
+body.ranked-theme .lb-row,
 body.ranked-theme .duration-input,
 body.ranked-theme .duration-set-btn,
 body.ranked-theme .note code {
@@ -308,6 +460,32 @@ body.ranked-theme .difficulty-btn[data-level="challenging"]:disabled {
   background: var(--rose);
   color: var(--paper);
   box-shadow: 4px 4px 0 #000;
+}
+
+body.ranked-theme .player-profile,
+body.ranked-theme .leaderboard {
+  background: color-mix(in srgb, #ffe9e9 88%, #fda4af 12%);
+  color: #2a0d14;
+}
+
+body.ranked-theme .profile-label,
+body.ranked-theme .lb-status {
+  color: #6b1c2f;
+}
+
+body.ranked-theme .profile-btn,
+body.ranked-theme .lb-row {
+  border-color: #000;
+}
+
+body.ranked-theme .lb-row.is-you {
+  background: color-mix(in srgb, var(--rose) 78%, #ffe4e6 22%);
+  color: #fff5f6;
+}
+
+body.ranked-theme .lb-empty {
+  border-color: #8b2740;
+  color: #7f2239;
 }
 
 .difficulty-btn {
@@ -515,4 +693,16 @@ body.ranked-theme .difficulty-btn[data-level="challenging"]:disabled {
 @media (max-width: 480px) {
   main { padding: 0; }
   .hud-value { font-size: 1.4rem; }
+  .player-profile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .profile-main {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .lb-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

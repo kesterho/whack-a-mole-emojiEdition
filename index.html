@@ -52,16 +52,34 @@
       <button class="mode-btn" data-mode="ranked" type="button">Ranked Play</button>
     </section>
 
+    <section class="player-profile" aria-label="Player profile">
+      <span class="profile-label">Player</span>
+      <div class="profile-main">
+        <span id="player-name" class="profile-name">guest</span>
+        <button id="change-name" class="profile-btn" type="button">Change name</button>
+      </div>
+    </section>
+
     <div class="controls">
       <button id="start" class="start-btn">Start</button>
       <button id="stop" class="stop-btn" disabled>Stop</button>
     </div>
+
+    <section id="leaderboard" class="leaderboard is-locked" aria-label="Ranked leaderboard">
+      <div class="lb-head">
+        <h2 class="lb-title">Ranked Leaderboard</h2>
+        <p id="lb-status" class="lb-status" aria-live="polite">Ranked mode only</p>
+      </div>
+      <ol id="lb-list" class="lb-list">
+        <li class="lb-empty">Switch to Ranked Play to view top scores.</li>
+      </ol>
+    </section>
 
     <footer class="note">
       built with <code>setInterval</code> · <code>Math.random</code> · a lot of caffeine
     </footer>
   </main>
 
-  <script src="script/script.js"></script>
+  <script type="module" src="script/script.js"></script>
 </body>
 </html>

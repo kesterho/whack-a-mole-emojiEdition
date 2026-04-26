@@ -12,6 +12,19 @@
 // ================================================================
 
 
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ─────────────────────────────────────────────────────────────
+// Supabase setup
+// (Settings → API in your Supabase project)
+// ─────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://ozrvtgmypugkcjncawgx.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_KcWjSEC8bWQ-T484mQq3ew_deVS8_Dk';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+
 // ─────────────────────────────────────────────────────────────
 // constants + DOM refs
 // ─────────────────────────────────────────────────────────────
@@ -42,6 +55,11 @@ const playModeBtns = document.querySelectorAll('.mode-btn');
 const durationControls = document.querySelector('#duration-controls');
 const customDurationInput = document.querySelector('#custom-duration');
 const setDurationBtn = document.querySelector('#set-duration');
+const playerEl = document.querySelector('#player-name');
+const changeBtn = document.querySelector('#change-name');
+const leaderboardSection = document.querySelector('#leaderboard');
+const lbStatus = document.querySelector('#lb-status');
+const lbList = document.querySelector('#lb-list');
 
 
 // ─────────────────────────────────────────────────────────────
@@ -63,9 +81,13 @@ const PLAY_MODES = {
   ranked: 'ranked',
 };
 const RANKED_DURATION_SECONDS = DEFAULT_DURATION;
+const LEADERBOARD_LIMIT = 10;
+const DEFAULT_PLAYER_NAME = 'guest';
 let selectedPlayMode = PLAY_MODES.casual;
 let previousCasualDifficulty = DEFAULT_DIFFICULTY;
 let previousCasualDuration = DEFAULT_DURATION;
+
+let username = DEFAULT_PLAYER_NAME;
 
 
 const showScoreDelta = (value, type) => {
@@ -107,6 +129,64 @@ const setDifficulty = (level) => {
   });
 };
 
+const escapeHtml = (value) => String(value)
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;');
+
+const renderLeaderboardMessage = (message) => {
+  lbList.innerHTML = `<li class="lb-empty">${escapeHtml(message)}</li>`;
+};
+
+const setLeaderboardCasualState = () => {
+  leaderboardSection.classList.add('is-locked');
+  lbStatus.textContent = 'Ranked mode only';
+  renderLeaderboardMessage('Switch to Ranked Play to view top scores.');
+};
+
+const loadLeaderboard = async () => {
+  if (selectedPlayMode !== PLAY_MODES.ranked) {
+    setLeaderboardCasualState();
+    return;
+  }
+
+  leaderboardSection.classList.remove('is-locked');
+  lbStatus.textContent = 'loading top players...';
+
+  const { data, error } = await supabase
+    .from('scores')
+    .select('username, score, created_at')
+    .order('score', { ascending: false })
+    .order('created_at', { ascending: true })
+    .limit(LEADERBOARD_LIMIT);
+
+  if (error) {
+    console.error(error);
+    lbStatus.textContent = 'leaderboard unavailable';
+    renderLeaderboardMessage(`error: ${error.message}`);
+    return;
+  }
+
+  if (!data?.length) {
+    lbStatus.textContent = 'no ranked runs yet';
+    renderLeaderboardMessage('Nobody has played Ranked yet - be first.');
+    return;
+  }
+
+  lbStatus.textContent = 'top 10 ranked runs';
+  lbList.innerHTML = data.map((row, i) => {
+    const isYou = row.username === username ? ' is-you' : '';
+    return `
+      <li class="lb-row${isYou}">
+        <span class="lb-rank">#${i + 1}</span>
+        <span class="lb-name">${escapeHtml(row.username)}</span>
+        <span class="lb-score">${row.score}</span>
+      </li>
+    `;
+  }).join('');
+};
+
 const setPlayMode = (mode) => {
   if (!PLAY_MODES[mode]) return;
   if (selectedPlayMode === PLAY_MODES.casual && mode === PLAY_MODES.ranked) {
@@ -130,6 +210,7 @@ const setPlayMode = (mode) => {
     setDuration(RANKED_DURATION_SECONDS);
     setDifficultyButtonsDisabled(true);
     setDurationButtonsDisabled(true);
+    void loadLeaderboard();
     return;
   }
 
@@ -140,6 +221,8 @@ const setPlayMode = (mode) => {
     setDurationButtonsDisabled(false);
     timeEl.textContent = selectedDuration;
   }
+
+  setLeaderboardCasualState();
 };
 
 const setDuration = (seconds) => {
@@ -159,6 +242,37 @@ const applyCustomDuration = () => {
   }
   setDuration(value);
 };
+
+
+
+const askForUsername = () => {
+  const currentName = username === DEFAULT_PLAYER_NAME ? '' : username;
+  let name = prompt('Enter your username', currentName);
+  if (name === null) return false;
+  name = name.trim().slice(0, 20);
+  if (!name) return false;
+  username = name;
+  localStorage.setItem('emojiWhackName', name);
+  playerEl.textContent = name;
+  return true;
+};
+
+const loadUsername = () => {
+  const saved = localStorage.getItem('emojiWhackName');
+  username = saved ? saved.trim().slice(0, 20) : DEFAULT_PLAYER_NAME;
+  if (!username) username = DEFAULT_PLAYER_NAME;
+  playerEl.textContent = username;
+};
+
+changeBtn.addEventListener('click', () => {
+  const changed = askForUsername();
+  if (changed && selectedPlayMode === PLAY_MODES.ranked) {
+    void loadLeaderboard();
+  }
+});
+
+
+
 
 
 // ─────────────────────────────────────────────────────────────
@@ -265,7 +379,7 @@ const startGame = () => {
   }, 1000);
 };
 
-const endGame = () => {
+const endGame = async () => {
   if (!isGameRunning && !gameInterval && !timerInterval) return;
   clearInterval(gameInterval);
   clearInterval(timerInterval);
@@ -285,12 +399,31 @@ const endGame = () => {
     setDurationButtonsDisabled(false);
   }
   startBtn.textContent = `Play again (${DIFFICULTIES[selectedDifficulty].label} · ${selectedDuration}s · last: ${score})`;
+  if (selectedPlayMode === PLAY_MODES.ranked) {
+    await saveScore(score);
+    await loadLeaderboard();
+  }
 };
 
+const saveScore = async (finalScore) => {
+  if (selectedPlayMode !== PLAY_MODES.ranked) return;
+  if (!username) return;
+  lbStatus.textContent = 'saving your score...';
+  const { error } = await supabase
+    .from('scores')
+    .insert({ username, score: finalScore });
+  if (error) {
+    console.error(error);
+    lbStatus.textContent = `couldn't save: ${error.message}`;
+    return;
+  }
 
+  lbStatus.textContent = `saved ${username} -> ${finalScore}`;
+};
 // ─────────────────────────────────────────────────────────────
 // kick things off
 // ─────────────────────────────────────────────────────────────
+
 startBtn.addEventListener('click', startGame);
 stopBtn.addEventListener('click', endGame);
 difficultyBtns.forEach((btn) => {
@@ -309,4 +442,7 @@ customDurationInput.addEventListener('keydown', (event) => {
 setDifficulty(DEFAULT_DIFFICULTY);
 setDuration(DEFAULT_DURATION);
 setPlayMode(PLAY_MODES.casual);
+
+loadUsername();
+setLeaderboardCasualState();
 
